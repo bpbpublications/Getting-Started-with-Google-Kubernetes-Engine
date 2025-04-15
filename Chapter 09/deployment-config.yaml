@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-deployment
+  namespace: default
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+        - name: nginx
+          image: nginx:1.14.2
+          ports:
+            - containerPort: 80
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              podAffinityTerm:
+                labelSelector:
+                  matchExpressions:
+                    - key: app
+                      operator: In
+                      values:
+                        - nginx
+                topologyKey: kubernetes.io/hostname
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 1
+
+
+# This Deployment configuration ensures that three replicas of the nginx application are running, with rolling updates configured to minimize service disruption. The strategy field specifies a rolling update strategy with maxUnavailable set to 1 and maxSurge set to 1, ensuring controlled scaling and minimal service disruption during updates.
+# Kubernetes
+
+# For more information on configuring rolling updates in Kubernetes Deployments, refer to the official documentation: https://kubernetes.io/docs/concepts/workloads/controllers/deployment/

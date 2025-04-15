@@ -1,0 +1,14 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: web-deployment
+spec:
+  replicas: 3
+  template:
+    spec:
+      containers:
+        - name: web-container
+          image: nginx:1.14.2
+          env:
+            - name: ENVIRONMENT
+              value: "staging"

@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: example-service
+spec:
+  selector:
+    app: example
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+  type: LoadBalancer
+
+# This Service configuration exposes the 'example' application via a LoadBalancer, directing traffic on port 80 to the corresponding pods.
+
+# K8s Services: https://kubernetes.io/docs/concepts/services-networking/service

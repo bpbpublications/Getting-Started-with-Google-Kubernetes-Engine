@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: my-application
+  namespace: default
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: my-application
+  template:
+    metadata:
+      labels:
+        app: my-application
+    spec:
+      containers:
+        - name: my-application
+          image: my-image:latest
+          resources:
+            requests:
+              cpu: "250m"
+              memory: "512Mi"
+            limits:
+              cpu: "500m"
+              memory: "1Gi"
+
+
+# Resource Requests: Define the minimum amount of CPU and memory resources that Kubernetes guarantees to the container. The scheduler uses these values to determine on which node to place the pod.
+
+# Resource Limits: Set the maximum amount of resources a container is allowed to consume. If a container exceeds its memory limit, it may be terminated; if it exceeds its CPU limit, it may be throttled.
+
+# Use kubectl to apply the configuration:
+# kubectl apply -f deployment.yaml
+
+# Check the status of the Deployment:
+# kubectl get deployments
+
+# Ensure that the pods are running:
+# kubectl get pods
+
+# For more information on managing resources for containers and pods, refer to the official Kubernetes documentation:
+
+# Resource Management for Pods and Containers: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/
+# Assign CPU Resources to Containers and Pods: https://kubernetes.io/docs/tasks/configure-pod-container/assign-cpu-resource/

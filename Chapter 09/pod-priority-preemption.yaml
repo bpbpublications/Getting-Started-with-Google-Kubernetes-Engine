@@ -1,0 +1,23 @@
+apiVersion: scheduling.k8s.io/v1
+kind: PriorityClass
+metadata:
+  name: high-priority
+value: 1000000
+globalDefault: false
+description: "Priority class for critical pods."
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: high-priority-pod
+spec:
+  containers:
+    - name: high-priority-container
+      image: nginx
+  priorityClassName: high-priority
+
+
+
+# This configuration defines a PriorityClass named high-priority with a value of 1000000, indicating a high priority level. The high-priority-pod is assigned this priority class, ensuring it has higher scheduling precedence over lower-priority pods. This setup helps guarantee resource allocation for essential services, especially during resource constraints.
+
+# For more details on Pod Priority and Preemption: https://kubernetes.io/docs/concepts/scheduling-eviction/pod-priority-preemption/?utm_source=chatgpt.com

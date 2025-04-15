@@ -1,0 +1,22 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: mypod
+  namespace: default
+spec:
+  containers:
+    - name: mycontainer
+      image: myimage
+  tolerations:
+    - key: "key1"
+      operator: "Equal"
+      value: "value1"
+      effect: "NoSchedule"
+    - key: "key2"
+      operator: "Exists"
+      effect: "NoSchedule"
+
+
+# This configuration allows mypod to be scheduled on nodes with taints key1=value1:NoSchedule or any taint with key2 key and NoSchedule effect.
+
+# For more information on taints and tolerations in Kubernetes, refer to the official documentation: https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/

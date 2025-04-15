@@ -1,0 +1,25 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: mypod
+  namespace: default
+spec:
+  containers:
+    - name: mycontainer
+      image: myimage
+  nodeSelector:
+    disktype: ssd
+  tolerations:
+    - key: "key1"
+      operator: "Equal"
+      value: "value1"
+      effect: "NoSchedule"
+    - key: "key2"
+      operator: "Exists"
+      effect: "NoSchedule"
+
+
+
+# This configuration ensures that mypod is scheduled on nodes labeled with disktype=ssd and tolerates nodes with taints key1=value1:NoSchedule and any taint with key2 key and NoSchedule effect.
+
+# For more information on assigning Pods to nodes, refer to the official Kubernetes documentation: https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/

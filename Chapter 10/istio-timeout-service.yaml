@@ -1,0 +1,24 @@
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: my-service
+  namespace: default
+spec:
+  hosts:
+    - my-service
+  http:
+    - route:
+        - destination:
+            host: my-service
+            subset: v1
+      timeout: 5s
+      retries:
+        attempts: 3
+        perTryTimeout: 2s
+
+
+# This configuration sets a 5-second timeout for requests to my-service, with up to 3 retry attempts, each having a per-try timeout of 2 seconds.
+
+# Note: Ensure that a corresponding DestinationRule defines the subset v1 for my-service.
+
+# For more details on configuring timeouts and retries in Istio's VirtualService, refer to the official documentation: https://istio.io/latest/docs/reference/config/networking/virtual-service/

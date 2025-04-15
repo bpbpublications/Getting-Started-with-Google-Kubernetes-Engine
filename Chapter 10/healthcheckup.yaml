@@ -1,0 +1,86 @@
+apiVersion: networking.gke.io/v1
+kind: ManagedCertificate
+metadata:
+  name: my-certificate
+  namespace: default
+spec:
+  domains:
+    - example.com
+
+# YAML configuration script for implementing a health check in GKE to ensure traffic is directed only to healthy instances
+
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: my-ingress
+  namespace: default
+  annotations:
+    kubernetes.io/ingress.class: "gce" # Specify GCE Ingress
+    networking.gke.io/managed-certificates: "my-certificate"
+spec:
+  defaultBackend:
+    service:
+      name: my-service
+      port:
+        number: 80
+  rules:
+    - host: example.com
+      http:
+        paths:
+          - path: /healthz
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: my-service
+                port:
+                  number: 8080
+  healthCheckNodePort: 31234 # Optional, for specifying the node port
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: my-service
+  namespace: default
+spec:
+  selector:
+    app: my-app
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8080
+  type: NodePort
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: my-app
+  namespace: default
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: my-app
+  template:
+    metadata:
+      labels:
+        app: my-app
+    spec:
+      containers:
+        - name: my-container
+          image: gcr.io/my-project/my-app:latest
+          ports:
+            - containerPort: 8080
+          livenessProbe: # Health check configuration
+            httpGet:
+              path: /healthz
+              port: 8080
+            initialDelaySeconds: 3
+            periodSeconds: 5
+          readinessProbe: # Ensures readiness for receiving traffic
+            httpGet:
+              path: /healthz
+              port: 8080
+            initialDelaySeconds: 3
+            periodSeconds: 5

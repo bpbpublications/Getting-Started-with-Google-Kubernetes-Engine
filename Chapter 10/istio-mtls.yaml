@@ -1,0 +1,26 @@
+apiVersion: security.istio.io/v1beta1
+kind: PeerAuthentication
+metadata:
+  name: default
+  namespace: istio-system
+spec:
+  mtls:
+    mode: STRICT
+---
+apiVersion: networking.istio.io/v1beta1
+kind: DestinationRule
+metadata:
+  name: default
+  namespace: istio-system
+spec:
+  host: "*.local"
+  trafficPolicy:
+    tls:
+      mode: ISTIO_MUTUAL
+
+
+# This configuration enforces mutual TLS (mTLS) for all services within the mesh, ensuring that all inter-service communication is encrypted and authenticated.
+
+# Note: Ensure that all workloads have sidecar proxies injected to enforce mTLS effectively.
+
+# For more information on configuring mTLS in Istio, refer to the official documentation: https://istio.io/latest/docs/tasks/security/authentication/mtls-migration/

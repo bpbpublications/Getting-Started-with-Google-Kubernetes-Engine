@@ -1,0 +1,16 @@
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: example-pdb
+  namespace: example-namespace
+spec:
+  minAvailable: 2
+  selector:
+    matchLabels:
+      app: example-app
+
+
+
+# This configuration ensures that at least two pods labeled app: example-app remain available during voluntary disruptions within the example-namespace namespace.
+
+# For more information on configuring Pod Disruption Budgets in Kubernetes, refer to the official documentation: https://kubernetes.io/docs/tasks/run-application/configure-pdb/

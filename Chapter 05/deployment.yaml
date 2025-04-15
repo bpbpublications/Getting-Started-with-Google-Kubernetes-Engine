@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: example-deployment
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: example
+  template:
+    metadata:
+      labels:
+        app: example
+    spec:
+      containers:
+        - name: example-container
+          image: nginx:latest
+          ports:
+            - containerPort: 80
+
+# This Deployment configuration sets up three replicas of an NGINX container, each exposing port 80.
+
+# K8s Deployments: https://kubernetes.io/docs/concepts/workloads/controllers/deployment/

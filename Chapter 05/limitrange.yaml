@@ -1,0 +1,27 @@
+apiVersion: v1
+kind: LimitRange
+metadata:
+  name: example-limitrange
+  namespace: default
+spec:
+  limits:
+    - type: Pod
+      max:
+        cpu: "2"
+        memory: 2Gi
+      min:
+        cpu: "200m"
+        memory: 6Mi
+    - type: Container
+      defaultRequest:
+        cpu: "200m"
+        memory: 10Mi
+      default:
+        cpu: "300m"
+        memory: 100Mi
+      max:
+        cpu: "2"
+        memory: 2Gi
+      min:
+        cpu: "100m"
+        memory: 3Mi

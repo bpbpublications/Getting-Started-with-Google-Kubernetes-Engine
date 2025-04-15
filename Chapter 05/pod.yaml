@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: example-pod
+  labels:
+    app: example-app
+spec:
+  containers:
+    - name: example-container
+      image: nginx:latest
+      ports:
+        - containerPort: 80
+
+
+# This YAML defines a Pod named example-pod running an NGINX container, exposing port 80. The labels field assigns a label app: example-app to the Pod, which is useful for service selection and management. The image field specifies the container image to use, in this case, the latest version of NGINX. The ports field indicates that the container listens on port 80. This configuration follows industry standards for defining a simple Pod in Kubernetes.

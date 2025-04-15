@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: example-deployment
+  namespace: default
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: example
+  template:
+    metadata:
+      labels:
+        app: example
+    spec:
+      containers:
+        - name: example-container
+          image: example-image:latest
+      topologySpreadConstraints:
+        - maxSkew: 1
+          topologyKey: kubernetes.io/hostname
+          whenUnsatisfiable: ScheduleAnyway
+          labelSelector:
+            matchLabels:
+              app: example
+
+
+# This configuration ensures that pods with the label app: example are evenly distributed across nodes, enhancing availability and resilience by preventing pod concentration on a single node.
+
+# For more information on Pod Topology Spread Constraints, refer to the official Kubernetes documentation: https://kubernetes.io/docs/concepts/scheduling-eviction/topology-spread-constraints/

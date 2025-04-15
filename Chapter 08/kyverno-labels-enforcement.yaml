@@ -1,0 +1,36 @@
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: require-labels
+  annotations:
+    policies.kyverno.io/title: Require Labels
+    policies.kyverno.io/category: Best Practices
+    policies.kyverno.io/severity: medium
+    policies.kyverno.io/subject: Pod, Label
+    policies.kyverno.io/description: >-
+      Ensure that all Pods have the required labels: app, environment, owner, team, and department.
+spec:
+  validationFailureAction: enforce
+  background: true
+  rules:
+    - name: check-required-labels
+      match:
+        any:
+          - resources:
+              kinds:
+                - Pod
+      validate:
+        message: "Missing required labels: app, environment, owner, team, department"
+        pattern:
+          metadata:
+            labels:
+              app: "?*"
+              environment: "?*"
+              owner: "?*"
+              team: "?*"
+              department: "?*"
+
+
+# This policy ensures that all Pods include the specified labels (app, environment, owner, team, department), promoting consistent metadata across your Kubernetes resources.
+
+# For more information on requiring specific labels using Kyverno, refer to the official policy example: https://kyverno.io/policies/best-practices/require-labels/require-labels/

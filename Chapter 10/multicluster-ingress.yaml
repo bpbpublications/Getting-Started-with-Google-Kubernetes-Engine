@@ -1,0 +1,44 @@
+apiVersion: networking.gke.io/v1
+kind: MultiClusterService
+metadata:
+  name: my-service-mcs
+  namespace: default
+spec:
+  template:
+    spec:
+      selector:
+        app: my-app
+      ports:
+        - name: http
+          protocol: TCP
+          port: 80
+          targetPort: 8080
+  clusters:
+    - link: "us-central1/gke-us"
+    - link: "europe-west1/gke-eu"
+
+---
+apiVersion: networking.gke.io/v1
+kind: MultiClusterIngress
+metadata:
+  name: global-ingress
+  namespace: default
+spec:
+  template:
+    spec:
+      rules:
+        - host: myapp.example.com
+          http:
+            paths:
+              - path: /
+                pathType: Prefix
+                backend:
+                  service:
+                    name: my-service-mcs
+                    port:
+                      number: 80
+
+# Use kubectl to apply the YAML file in the config cluster:
+# kubectl apply -f multi-cluster-ingress.yaml
+
+# Update your DNS records to point myapp.example.com to the external IP address provisioned by the Multi-Cluster Ingress.

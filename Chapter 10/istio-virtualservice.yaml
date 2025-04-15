@@ -1,0 +1,28 @@
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: my-service
+  namespace: default
+spec:
+  hosts:
+    - "my-service"
+  http:
+    - match:
+        - headers:
+            user-type:
+              exact: tester
+      route:
+        - destination:
+            host: my-service
+            subset: v2
+    - route:
+        - destination:
+            host: my-service
+            subset: v1
+
+
+# This configuration routes users with a user-type header of tester to version 2 (v2) of the service, while all others receive version 1 (v1).
+
+# Note: Ensure that corresponding DestinationRule configurations define the subsets v1 and v2 for my-service.
+
+# For more details on configuring request routing with Istio's VirtualService, refer to the official documentation: https://istio.io/latest/docs/reference/config/networking/virtual-service/

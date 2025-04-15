@@ -1,0 +1,39 @@
+apiVersion: security.istio.io/v1beta1
+kind: AuthorizationPolicy
+metadata:
+  name: productpage-viewer
+  namespace: default
+spec:
+  selector:
+    matchLabels:
+      app: productpage
+  action: ALLOW
+  rules:
+    - from:
+        - source:
+            principals: ["cluster.local/ns/default/sa/bookinfo-productpage"]
+      to:
+        - operation:
+            methods: ["GET"]
+    - from:
+        - source:
+            namespaces: ["trusted-namespace"]
+      to:
+        - operation:
+            methods: ["GET", "POST"]
+    - from:
+        - source:
+            ipBlocks: ["192.168.1.0/24"]
+      to:
+        - operation:
+            methods: ["*"]
+    - to:
+        - operation:
+            methods: ["OPTIONS"]
+
+
+# This AuthorizationPolicy defines fine-grained access controls for the productpage service in the default namespace, specifying allowed sources and HTTP methods.
+
+# Note: Ensure that the specified service accounts, namespaces, and IP blocks exist and are correctly configured in your environment.
+
+# For more information on Istio's authorization policies, refer to the official documentation: https://istio.io/latest/docs/ambient/getting-started/enforce-auth-policies/

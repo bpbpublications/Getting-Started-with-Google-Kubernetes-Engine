@@ -1,0 +1,28 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: example-ingress
+  namespace: default
+  annotations:
+    kubernetes.io/ingress.class: "gce"
+spec:
+  tls:
+    - hosts:
+        - example.com
+      secretName: example-tls
+  rules:
+    - host: example.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: example-service
+                port:
+                  number: 80
+
+
+# This Ingress resource routes HTTP and HTTPS traffic for example.com to the example-service on port 80. The TLS configuration references a Kubernetes Secret named example-tls that contains the SSL certificate and private key for example.com. Ensure that the example-tls Secret is created in the same namespace (default) as the Ingress resource.
+
+# For more information on configuring Ingress with TLS in GKE, refer to the official documentation: https://cloud.google.com/kubernetes-engine/docs/concepts/ingress-xlb

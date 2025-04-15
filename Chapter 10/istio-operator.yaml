@@ -1,0 +1,31 @@
+apiVersion: install.istio.io/v1alpha1
+kind: IstioOperator
+metadata:
+  name: istio-control-plane
+  namespace: istio-system
+spec:
+  profile: default
+  meshConfig:
+    enableAutoMtls: true
+  components:
+    ingressGateways:
+      - name: istio-ingressgateway
+        enabled: true
+    egressGateways:
+      - name: istio-egressgateway
+        enabled: true
+    telemetry:
+      enabled: true
+  values:
+    global:
+      proxy:
+        accessLogFile: "/dev/stdout"
+    telemetry:
+      v2:
+        enabled: true
+        prometheus:
+          enabled: true
+        stackdriver:
+          enabled: false
+        accessLogPolicy:
+          enabled: true

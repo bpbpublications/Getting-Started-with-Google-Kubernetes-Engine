@@ -1,0 +1,45 @@
+apiVersion: networking.istio.io/v1beta1
+kind: Gateway
+metadata:
+  name: my-gateway
+  namespace: default
+spec:
+  selector:
+    istio: ingressgateway # Use Istio's default ingress gateway
+  servers:
+    - port:
+        number: 80
+        name: http
+        protocol: HTTP
+      hosts:
+        - "example.com"
+---
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: my-service
+  namespace: default
+spec:
+  hosts:
+    - "example.com"
+  gateways:
+    - my-gateway
+  http:
+    - route:
+        - destination:
+            host: my-service.default.svc.cluster.local
+            port:
+              number: 80
+
+
+# Use kubectl to apply the configuration:
+# kubectl apply -f istio-ingress.yaml
+
+# Check the status of the Gateway and VirtualService:
+# kubectl get gateway my-gateway -n default
+# kubectl get virtualservice my-service -n default
+
+# References: For more information on configuring Gateways and VirtualServices in Istio, refer to the official documentation:
+
+# Istio Gateway Configuration: https://istio.io/latest/docs/reference/config/networking/gateway/
+# Istio VirtualService Configuration: https://istio.io/latest/docs/reference/config/networking/virtual-service/

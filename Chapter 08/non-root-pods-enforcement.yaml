@@ -1,0 +1,35 @@
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: require-non-root-users
+  annotations:
+    policies.kyverno.io/title: Require Non-Root Users
+    policies.kyverno.io/category: Pod Security
+    policies.kyverno.io/severity: high
+    policies.kyverno.io/subject: Pod Security Context
+    policies.kyverno.io/description: >-
+      Enforces that all Pods are configured to run as a non-root user by setting
+      `runAsNonRoot: true` in the Pod's security context.
+spec:
+  validationFailureAction: enforce
+  background: true
+  rules:
+    - name: check-for-non-root-users
+      match:
+        any:
+          - resources:
+              kinds:
+                - Pod
+      validate:
+        message: "Running as root is not allowed. Please configure the Pod to run as a non-root user."
+        pattern:
+          spec:
+            securityContext:
+              runAsNonRoot: true
+            containers:
+              - securityContext:
+                  runAsNonRoot: true
+
+# This policy enforces that all Pods are configured to run as non-root users by setting runAsNonRoot: true in both the Pod and container security contexts.
+
+# For more information on enforcing non-root user policies with Kyverno, refer to the official policy example: https://kyverno.io/policies/pod-security/restricted/require-run-as-non-root-user/require-run-as-non-root-user/

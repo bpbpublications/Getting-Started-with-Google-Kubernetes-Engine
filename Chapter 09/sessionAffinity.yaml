@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: my-service
+  namespace: default
+spec:
+  selector:
+    app: my-app
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 9376
+  sessionAffinity: ClientIP
+  sessionAffinityConfig:
+    clientIP:
+      timeoutSeconds: 10800
+
+
+# This configuration defines a Service named my-service in the default namespace, targeting pods labeled app: my-app. It listens on port 80 and forwards traffic to port 9376 on the pods. The sessionAffinity is set to ClientIP, ensuring that requests from the same client IP are directed to the same pod. The sessionAffinityConfig specifies a timeout of 10,800 seconds (3 hours) for the session affinity.
+
+# For more information on configuring session affinity in Kubernetes Services, refer to the official documentation: https://kubernetes.io/docs/reference/networking/virtual-ips/#session-affinity

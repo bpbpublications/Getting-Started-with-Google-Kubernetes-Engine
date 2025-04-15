@@ -1,0 +1,23 @@
+apiVersion: keda.sh/v1alpha1
+kind: ScaledObject
+metadata:
+  name: pubsub-scaledobject
+  namespace: default
+spec:
+  scaleTargetRef:
+    name: your-deployment-name
+  pollingInterval: 30  # Checks every 30 seconds
+  cooldownPeriod: 300  # Waits 300 seconds before scaling down
+  minReplicaCount: 1   # Ensures at least 1 replica
+  maxReplicaCount: 50  # Caps scaling to 50 replicas
+  triggers:
+    - type: gcp-pubsub
+      metadata:
+        subscriptionSize: "5"
+        subscriptionName: "your-subscription-name"
+        credentialsFromEnv: GOOGLE_APPLICATION_CREDENTIALS_JSON
+
+
+# This configuration uses KEDA to autoscale a deployment based on Google Cloud Pub/Sub subscription size, ensuring optimal resource utilization.
+
+# More on Keda ScaledObject: https://keda.sh/docs/2.15/reference/scaledobject-spec/

@@ -1,0 +1,24 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: backend-policy
+  namespace: prod
+spec:
+  podSelector:
+    matchLabels:
+      app: backend
+  policyTypes:
+    - Ingress
+  ingress:
+    - from:
+        - podSelector:
+            matchLabels:
+              app: frontend
+      ports:
+        - protocol: TCP
+          port: 80
+
+
+This NetworkPolicy allows TCP traffic on port 80 to pods labeled app: backend in the prod namespace, exclusively from pods labeled app: frontend.
+
+For more information, refer: https://kubernetes.io/docs/concepts/services-networking/network-policies/

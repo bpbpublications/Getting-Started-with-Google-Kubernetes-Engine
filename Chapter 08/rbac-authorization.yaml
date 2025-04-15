@@ -1,0 +1,54 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  namespace: default
+  name: pod-reader
+rules:
+  - apiGroups: [""]
+    resources: ["pods"]
+    verbs: ["get", "watch", "list"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  namespace: default
+  name: secret-manager
+rules:
+  - apiGroups: [""]
+    resources: ["secrets"]
+    verbs: ["get", "create", "delete"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: read-pods
+  namespace: default
+subjects:
+  - kind: User
+    name: jane
+    apiGroup: rbac.authorization.k8s.io
+roleRef:
+  kind: Role
+  name: pod-reader
+  apiGroup: rbac.authorization.k8s.io
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: manage-secrets
+  namespace: default
+subjects:
+  - kind: ServiceAccount
+    name: secret-operator
+    namespace: default
+roleRef:
+  kind: Role
+  name: secret-manager
+  apiGroup: rbac.authorization.k8s.io
+
+
+# This YAML defines two roles: pod-reader (read-only access to pods) and secret-manager (manage secrets). It binds the pod-reader role to user jane and the secret-manager role to a service account named secret-operator.
+
+# For more details: https://kubernetes.io/docs/reference/access-authn-authz/rbac/
+
+# Role Based Access Control Good Practices: https://kubernetes.io/docs/concepts/security/rbac-good-practices/
